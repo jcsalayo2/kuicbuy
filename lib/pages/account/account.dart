@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kuicbuy/constants/constant.dart';
 import 'package:kuicbuy/pages/account/bloc/account_bloc.dart';
+import 'package:kuicbuy/pages/add_product/add_product.dart';
 import 'package:kuicbuy/pages/signuplogin/signuplogin.dart';
 
 class Account extends StatefulWidget {
@@ -155,12 +156,12 @@ class _AccountState extends State<Account> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const AddProduct(),
-                          //   ),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddProduct(),
+                            ),
+                          );
                         },
                         child: Ink(
                           decoration: BoxDecoration(
