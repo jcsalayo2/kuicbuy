@@ -11,10 +11,8 @@ import 'package:kuicbuy/pages/home/bloc/product_list_bloc.dart';
 import 'package:kuicbuy/pages/home/product_list.dart';
 
 void main() async {
-  // await Environment.initialize();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
+  await Environment.initialize();
   runApp(const MyApp());
 }
 

@@ -17,7 +17,7 @@ class _ProductListState extends State<ProductList> {
     return BlocBuilder<ProductListBloc, ProductListState>(
       builder: (context, state) {
         return MasonryGridView.count(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           crossAxisCount: 2,
@@ -60,7 +60,7 @@ class ProductContainer extends StatelessWidget {
                     state.products[index].title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                     ),
                   ),
