@@ -35,3 +35,12 @@ class CreateAccount extends SignupLoginEvent {
     required this.password,
   });
 }
+
+class Login extends SignupLoginEvent {
+  final String email;
+  final String password;
+  @override
+  List<Object> get props => [];
+
+  const Login({required this.email, required this.password});
+}

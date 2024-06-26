@@ -16,6 +16,7 @@ class SignupLoginBloc extends Bloc<SignupLoginEvent, SignupLoginState> {
     on<SwitchToSignupOrLogin>(_switchToSignupOrLogin);
     on<SwitchPasswordVisibility>(_switchPasswordVisibility);
     on<CreateAccount>(_createAccount);
+    on<Login>(_login);
   }
 
   FutureOr<void> _switchToSignupOrLogin(
@@ -69,8 +70,37 @@ class SignupLoginBloc extends Bloc<SignupLoginEvent, SignupLoginState> {
         return 'The account already exists for that email.';
       case 'invalid-email':
         return 'The email address is not valid.';
+      case 'user-not-found':
+        return 'User not found';
+      case 'wrong-password':
+        return 'Wrong password';
       default:
         return 'An unknown error occurred.';
+    }
+  }
+
+  FutureOr<void> _login(Login event, Emitter<SignupLoginState> emit) async {
+    var result = await FirebaseAuthService(FirebaseAuth.instance).logIn(
+      email: event.email,
+      password: event.password,
+    );
+
+    if (result == true) {
+      emit(state.copyWith(
+        isSignupLoginDone: true,
+      ));
+    } else {
+      emit(state.copyWith(
+        isSignupLoginDone: false,
+        hasError: true,
+        errorMessage: getErrorDisplay(result),
+        dateTime: DateTime.now(),
+      ));
+      emit(state.copyWith(
+        hasError: false,
+        errorMessage: "",
+        dateTime: DateTime.now(),
+      ));
     }
   }
 }

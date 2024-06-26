@@ -1,14 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kuicbuy/models/account_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AccountServices {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
 
-  Future<Account> getUser({required String userId}) async {
-    var dSnapSHot = await users.doc(userId).get();
-    print('QSNAPSHOT: ${dSnapSHot}');
+  final storage = FirebaseStorage.instance;
 
-    return Account.fromJson(dSnapSHot.data() as Map<String, dynamic>);
+  Future<Account> getUser({required String userId}) async {
+    var dSnapshot = await users.doc(userId).get();
+
+    // accountFromJson(dSnapshot.data as String);
+
+    var url =
+        await storage.ref().child('${dSnapshot['avatar']}').getDownloadURL();
+
+    return Account(
+      uid: dSnapshot['uid'],
+      avatar: url,
+      fullName: dSnapshot['fullName'],
+      isSeller: dSnapshot['isSeller'],
+    );
   }
 }
