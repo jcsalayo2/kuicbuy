@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:math';
 
 class FirebaseAuthService {
   final FirebaseAuth _firebaseAuth;
@@ -18,7 +19,7 @@ class FirebaseAuthService {
       if (e.code == 'invalid-login-credentials') {
         return 'Wrong email or password.';
       }
-      return e.message;
+      return e.code;
     }
   }
 
@@ -30,7 +31,7 @@ class FirebaseAuthService {
       var result = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      setUpUser(name: name, uid: result.user!.uid);
+      await setUpUser(name: name, uid: result.user!.uid);
       return true;
     } on FirebaseAuthException catch (e) {
       return e.code;
@@ -38,10 +39,12 @@ class FirebaseAuthService {
   }
 
   Future<dynamic> setUpUser({required String name, required String uid}) async {
+    final random = Random();
+
     try {
       Map<String, dynamic> data = {
-        "avatar":
-            "https://gravatar.com/avatar/b6ae0b40c9a6498a2b8f1bd23d346d02?s=400&d=identicon&r=x",
+        "uid": uid,
+        "avatar": "avatars/user${random.nextInt(6) + 1}.png",
         "fullName": name,
         "isSeller": false
       };

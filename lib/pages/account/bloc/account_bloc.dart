@@ -19,6 +19,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   FutureOr<void> _getAccount(
       GetAccount event, Emitter<AccountState> emit) async {
+    emit(state.copyWith(
+      accountStatus: AccountStatus.loading,
+    ));
     if (event.userId == '') {
       // await Future.delayed(const Duration(seconds: 2));
       emit(state.copyWith(
@@ -31,6 +34,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     emit(state.copyWith(
       account: account,
+      accountStatus: AccountStatus.hasAccount,
     ));
   }
 }

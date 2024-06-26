@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kuicbuy/constants/constant.dart';
 import 'package:kuicbuy/main.dart';
+import 'package:kuicbuy/pages/account/bloc/account_bloc.dart';
 import 'package:kuicbuy/pages/signuplogin/bloc/signup_login_bloc.dart';
 
 class SignupLogin extends StatefulWidget {
@@ -132,7 +133,21 @@ class _SignupLoginState extends State<SignupLogin> {
                                     backgroundColor: Colors.blue),
                                 onPressed: () {
                                   if (state.isLogin) {
+                                    context.read<SignupLoginBloc>().add(Login(
+                                          email: emailController.text,
+                                          password: passwordController.text,
+                                        ));
                                   } else {
+                                    if (passwordController.text !=
+                                        confirmPasswordController.text) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              backgroundColor: Colors.blue,
+                                              duration: Duration(seconds: 2),
+                                              content: Text(
+                                                  "Password and Confirm Password are not the same")));
+                                      return;
+                                    }
                                     context
                                         .read<SignupLoginBloc>()
                                         .add(CreateAccount(
