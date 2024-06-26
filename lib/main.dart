@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kuicbuy/core/boot/environment.dart';
 import 'package:kuicbuy/firebase_options.dart';
 import 'package:kuicbuy/pages/account/account.dart';
 import 'package:kuicbuy/pages/account/bloc/account_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:kuicbuy/pages/home/bloc/product_list_bloc.dart';
 import 'package:kuicbuy/pages/home/product_list.dart';
 
 void main() async {
+  await Environment.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
