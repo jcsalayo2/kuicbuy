@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "258863536023",
+    "project_id": "kuicbuy",
+    "storage_bucket": "kuicbuy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258863536023:android:efa2b30e49279ceef556d2",
+        "android_client_info": {
+          "package_name": "com.example.kuicbuy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBjs4_rSungPcjmqKZFu_ihFxu1FCulQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
