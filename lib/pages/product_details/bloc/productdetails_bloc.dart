@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:kuicbuy/models/product_model.dart';
+import 'package:kuicbuy/services/generative_ai_service.dart';
 
 import '../../../constants/constant.dart';
 
@@ -17,6 +18,7 @@ class ProductDetailsBloc
     });
     on<CompileAllImages>(_compileImages);
     on<SetSelectedImageIndex>(_setSelectedImageIndex);
+    on<AskGemini>(_askGemini);
   }
 
   FutureOr<void> _compileImages(
@@ -42,6 +44,22 @@ class ProductDetailsBloc
       SetSelectedImageIndex event, Emitter<ProductDetailsState> emit) {
     emit(state.copyWith(
       selectedImageIndex: event.index,
+    ));
+  }
+
+  FutureOr<void> _askGemini(
+      AskGemini event, Emitter<ProductDetailsState> emit) async {
+    emit(state.copyWith(
+      geminiStatus: GeminiStatus.loading,
+      geminiResponse: '',
+    ));
+
+    var response =
+        await GenerativeAIService().getProductDetails(title: event.title);
+
+    emit(state.copyWith(
+      geminiStatus: GeminiStatus.idle,
+      geminiResponse: response,
     ));
   }
 }

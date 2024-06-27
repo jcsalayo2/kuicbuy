@@ -34,7 +34,7 @@ class _ProductListState extends State<ProductList> {
   }
 }
 
-class ProductContainer extends StatefulWidget {
+class ProductContainer extends StatelessWidget {
   const ProductContainer({
     super.key,
     required this.product,
@@ -43,18 +43,13 @@ class ProductContainer extends StatefulWidget {
   final Product product;
 
   @override
-  State<ProductContainer> createState() => _ProductContainerState();
-}
-
-class _ProductContainerState extends State<ProductContainer> {
-  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductDetails(product: widget.product),
+            builder: (context) => ProductDetails(product: product),
           ),
         );
       },
@@ -62,27 +57,7 @@ class _ProductContainerState extends State<ProductContainer> {
         color: Colors.indigo[50],
         child: Column(
           children: [
-            Image.network(
-              height: 170,
-              width: double.infinity,
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: Shimmer.fromColors(
-                    baseColor: const Color(0xff3290A3),
-                    highlightColor: const Color(0xFF4DBFD6),
-                    enabled: true,
-                    child: shimmerCard(
-                      context: context,
-                      height: 150,
-                    ),
-                  ),
-                );
-              },
-              widget.product.images.thumbnail,
-              fit: BoxFit.cover,
-            ),
+            ProductImage(image: product.images.thumbnail),
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -90,7 +65,7 @@ class _ProductContainerState extends State<ProductContainer> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      widget.product.title,
+                      product.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -101,7 +76,7 @@ class _ProductContainerState extends State<ProductContainer> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      widget.product.description.short,
+                      product.description.short,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -116,7 +91,7 @@ class _ProductContainerState extends State<ProductContainer> {
                         color: Colors.indigo[900],
                         fontWeight: FontWeight.bold,
                       ),
-                      "₱${oCcy.format(widget.product.price)}",
+                      "₱${oCcy.format(product.price)}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -127,6 +102,46 @@ class _ProductContainerState extends State<ProductContainer> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ProductImage extends StatelessWidget {
+  const ProductImage({
+    super.key,
+    required this.image,
+  });
+
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      height: 150,
+      width: double.infinity,
+      loadingBuilder: (BuildContext context, Widget child,
+          ImageChunkEvent? loadingProgress) {
+        if (loadingProgress == null) return child;
+        return const SizedBox(
+          height: 150,
+          width: double.infinity,
+          child: Center(child: CircularProgressIndicator()),
+        );
+        // return Center(
+        //   child: Shimmer.fromColors(
+        //     period: Duration(seconds: 1),
+        //     baseColor: Colors.blue[50]!,
+        //     highlightColor: Colors.blue[400]!,
+        //     enabled: true,
+        //     child: shimmerCard(
+        //       context: context,
+        //       height: 150,
+        //     ),
+        //   ),
+        // );
+      },
+      image,
+      fit: BoxFit.cover,
     );
   }
 }

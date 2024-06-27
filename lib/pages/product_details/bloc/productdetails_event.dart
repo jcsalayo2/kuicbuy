@@ -26,3 +26,13 @@ class SetSelectedImageIndex extends ProductdetailsEvent {
     required this.index,
   });
 }
+
+class AskGemini extends ProductdetailsEvent {
+  final String title;
+  @override
+  List<Object> get props => [];
+
+  const AskGemini({
+    required this.title,
+  });
+}
