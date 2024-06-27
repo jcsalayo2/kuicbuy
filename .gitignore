@@ -34,3 +34,4 @@ windows/flutter/generated_plugin_registrant.h
 windows/flutter/generated_plugins.cmake
 .firebase
 node_modules
+dotenv

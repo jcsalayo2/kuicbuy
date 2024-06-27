@@ -10,7 +10,7 @@ class GenerativeAIService {
 
     final content = [
       Content.text(
-          'Write a short welcome message for "${name}" for logging in in my app KuicBuy. an ECommerce app')
+          'Write a short welcome message for "$name" for logging in in my app KuicBuy. an ECommerce app')
     ];
     final response = await model.generateContent(content);
     print(response.text);

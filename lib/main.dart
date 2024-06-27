@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kuicbuy/core/boot/environment.dart';
 import 'package:kuicbuy/firebase_options.dart';
 import 'package:kuicbuy/pages/account/account.dart';
@@ -94,10 +93,11 @@ class Display extends StatelessWidget {
       case 0:
         return BlocProvider(
           create: (context) => ProductListBloc()..add(const GetProducts()),
-          child: ProductList(),
+          child: const ProductList(),
         );
       case 1:
-        return Center(child: Text("Not Yet Implemented Wag Assuming"));
+        return const Center(
+            child: Text("Not Yet Implemented. Alam Mo Kung Baket?"));
       case 2:
         return BlocProvider(
           create: (context) => AccountBloc()
@@ -107,7 +107,7 @@ class Display extends StatelessWidget {
       default:
         return BlocProvider(
           create: (context) => ProductListBloc()..add(const GetProducts()),
-          child: ProductList(),
+          child: const ProductList(),
         );
     }
   }

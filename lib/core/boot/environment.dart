@@ -34,9 +34,6 @@ class Environment {
     if (!dotenv.env.containsKey(key)) {
       return '';
     }
-
-    print('DOTENV.ENV[KEY] AS STRING: ${dotenv.env[key] as String}');
-
     return dotenv.env[key] as String;
   }
 }
