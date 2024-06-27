@@ -1,10 +1,13 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 enum AccountStatus { loading, noAccount, hasAccount }
 
 enum ProductStatus { initial, uploading, done, error }
+
+enum ProductDetailsStatus { initial, loading, done, error }
 
 final oCcy = NumberFormat("#,##0.00", "en_US");
 
@@ -24,4 +27,35 @@ Path roundedDottedBorder(size) {
         radius: Radius.circular(cardRadius))
     ..lineTo(0, cardRadius)
     ..arcToPoint(Offset(cardRadius, 0), radius: Radius.circular(cardRadius));
+}
+
+Widget shimmerCard({required BuildContext context, double height = 150}) {
+  return Card(
+      elevation: 1,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
+      child: Container(
+        //height: 200,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(0)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Stack(children: [
+              Container(
+                height: height,
+              ),
+            ]),
+            Container(
+              width: double.infinity,
+              height: 20.0,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ));
 }

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kuicbuy/constants/constant.dart';
+import 'package:kuicbuy/models/product_model.dart';
 import 'package:kuicbuy/pages/home/bloc/product_list_bloc.dart';
+import 'package:kuicbuy/pages/product_details/product_details.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({super.key});
@@ -24,69 +27,105 @@ class _ProductListState extends State<ProductList> {
           crossAxisCount: 2,
           itemCount: state.products.length,
           itemBuilder: (context, index) =>
-              ProductContainer(state: state, index: index),
+              ProductContainer(product: state.products[index]),
         );
       },
     );
   }
 }
 
-class ProductContainer extends StatelessWidget {
+class ProductContainer extends StatefulWidget {
   const ProductContainer({
     super.key,
-    required this.state,
-    required this.index,
+    required this.product,
   });
 
-  final int index;
-  final ProductListState state;
+  final Product product;
 
   @override
+  State<ProductContainer> createState() => _ProductContainerState();
+}
+
+class _ProductContainerState extends State<ProductContainer> {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[200],
-      child: Column(
-        children: [
-          Image.network(
-            state.products[index].images.thumbnail,
-            fit: BoxFit.cover,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetails(product: widget.product),
           ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    state.products[index].title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 20,
+        );
+      },
+      child: Ink(
+        color: Colors.indigo[50],
+        child: Column(
+          children: [
+            Image.network(
+              height: 170,
+              width: double.infinity,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: Shimmer.fromColors(
+                    baseColor: const Color(0xff3290A3),
+                    highlightColor: const Color(0xFF4DBFD6),
+                    enabled: true,
+                    child: shimmerCard(
+                      context: context,
+                      height: 150,
                     ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    state.products[index].description.short,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const Divider(thickness: 1),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    "₱${oCcy.format(state.products[index].price)}",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+                );
+              },
+              widget.product.images.thumbnail,
+              fit: BoxFit.cover,
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.product.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.product.description.short,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const Divider(
+                    thickness: 1,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      style: TextStyle(
+                        color: Colors.indigo[900],
+                        fontWeight: FontWeight.bold,
+                      ),
+                      "₱${oCcy.format(widget.product.price)}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
