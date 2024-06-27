@@ -11,8 +11,10 @@ import 'package:kuicbuy/pages/home/bloc/product_list_bloc.dart';
 import 'package:kuicbuy/pages/home/product_list.dart';
 
 void main() async {
-  await Firebase.initializeApp();
   await Environment.initialize();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -91,24 +93,21 @@ class Display extends StatelessWidget {
       case 0:
         return BlocProvider(
           create: (context) => ProductListBloc()..add(const GetProducts()),
-          child: ProductList(),
+          child: const ProductList(),
         );
       case 1:
-        return Center(child: Text("Not Yet Implemented Alam Mo Kung Bakit?"));
+        return const Center(
+            child: Text("Not Yet Implemented. Alam Mo Kung Baket?"));
       case 2:
-        return MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => AccountBloc()
-                ..add(GetAccount(userId: auth.currentUser?.uid ?? '')),
-            ),
-          ],
+        return BlocProvider(
+          create: (context) => AccountBloc()
+            ..add(GetAccount(userId: auth.currentUser?.uid ?? '')),
           child: const Account(),
         );
       default:
         return BlocProvider(
           create: (context) => ProductListBloc()..add(const GetProducts()),
-          child: ProductList(),
+          child: const ProductList(),
         );
     }
   }

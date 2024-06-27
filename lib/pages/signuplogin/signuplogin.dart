@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kuicbuy/constants/constant.dart';
-import 'package:kuicbuy/main.dart';
-import 'package:kuicbuy/pages/account/bloc/account_bloc.dart';
 import 'package:kuicbuy/pages/signuplogin/bloc/signup_login_bloc.dart';
 
 class SignupLogin extends StatefulWidget {
@@ -27,7 +24,7 @@ class _SignupLoginState extends State<SignupLogin> {
             if (state.hasError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  duration: Duration(seconds: 1),
+                  duration: const Duration(seconds: 1),
                   content: Text(state.errorMessage),
                 ),
               );
@@ -190,7 +187,7 @@ class _SignupLoginState extends State<SignupLogin> {
                                 : "Already have an account? "),
                             Text(
                               state.isLogin ? "Sign Up" : "Log In",
-                              style: TextStyle(color: Colors.blue),
+                              style: const TextStyle(color: Colors.blue),
                             ),
                           ],
                         );

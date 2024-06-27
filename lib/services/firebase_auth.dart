@@ -16,6 +16,9 @@ class FirebaseAuthService {
           email: email, password: password);
       return true;
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-login-credentials') {
+        return 'Wrong email or password.';
+      }
       return e.code;
     }
   }

@@ -11,8 +11,6 @@ class AccountServices {
   Future<Account> getUser({required String userId}) async {
     var dSnapshot = await users.doc(userId).get();
 
-    // accountFromJson(dSnapshot.data as String);
-
     var url =
         await storage.ref().child('${dSnapshot['avatar']}').getDownloadURL();
 

@@ -2,7 +2,6 @@
 //
 //     final account = accountFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 Account accountFromJson(String str) => Account.fromJson(json.decode(str));

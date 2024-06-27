@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +23,7 @@ class _AccountState extends State<Account> {
     return BlocBuilder<AccountBloc, AccountState>(
       builder: (context, state) {
         return SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -37,7 +39,7 @@ class _AccountState extends State<Account> {
                         case AccountStatus.noAccount:
                           return Colors.blue[100];
                         case AccountStatus.hasAccount:
-                          return Colors.blue;
+                          return Colors.green;
                       }
                     }(),
                     borderRadius: const BorderRadius.all(Radius.circular(20))),
@@ -94,7 +96,6 @@ class _AccountState extends State<Account> {
                     );
                   } else if (state.accountStatus == AccountStatus.hasAccount) {
                     return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,7 +133,7 @@ class _AccountState extends State<Account> {
                               ],
                             ),
                           ],
-                        ),
+                        )
                       ],
                     );
                   }
@@ -165,6 +166,7 @@ class _AccountState extends State<Account> {
                           );
                         },
                         child: Ink(
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.amber,
                             borderRadius: BorderRadius.circular(10),
@@ -182,7 +184,7 @@ class _AccountState extends State<Account> {
                       ),
                     ],
                   ),
-                ),
+                )
             ],
           ),
         );

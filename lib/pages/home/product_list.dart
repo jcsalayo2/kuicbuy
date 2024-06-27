@@ -17,6 +17,7 @@ class _ProductListState extends State<ProductList> {
     return BlocBuilder<ProductListBloc, ProductListState>(
       builder: (context, state) {
         return MasonryGridView.count(
+          physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.all(10),
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,

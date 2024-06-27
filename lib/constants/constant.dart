@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 
 enum AccountStatus { loading, noAccount, hasAccount }
 
+enum ProductStatus { initial, uploading, done, error }
+
 final oCcy = NumberFormat("#,##0.00", "en_US");
 
 Path roundedDottedBorder(size) {
