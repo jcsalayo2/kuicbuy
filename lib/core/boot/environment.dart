@@ -11,8 +11,8 @@ class Environment {
     this.generativeAIKey = '',
   });
 
-  static Future<void> initialize({String filename = '.env'}) async {
-    await dotenv.load(fileName: filename);
+  static Future<void> initialize({String filename = 'dotenv'}) async {
+    await dotenv.load(fileName: 'dotenv');
 
     final generativeAIKey = _getString('GENERATIVE_LANGUAGE_API_KEY');
 
@@ -34,6 +34,8 @@ class Environment {
     if (!dotenv.env.containsKey(key)) {
       return '';
     }
+
+    print('DOTENV.ENV[KEY] AS STRING: ${dotenv.env[key] as String}');
 
     return dotenv.env[key] as String;
   }
