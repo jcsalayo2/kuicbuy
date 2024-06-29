@@ -58,6 +58,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                       ),
                       GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
                         padding: const EdgeInsets.only(top: 15, bottom: 20),
                         shrinkWrap: true,
                         itemCount: state.images.length,

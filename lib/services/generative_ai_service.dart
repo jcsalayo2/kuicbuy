@@ -24,7 +24,9 @@ class GenerativeAIService {
     );
 
     final content = [
-      Content.text('What is "$title"? What are the uses of $title')
+      Content.text('What is "$title"?'),
+      Content.text('What are the uses of $title'),
+      // Content.data(mimeType, bytes)
     ];
     final response = await model.generateContent(content);
 

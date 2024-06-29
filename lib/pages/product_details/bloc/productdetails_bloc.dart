@@ -54,6 +54,8 @@ class ProductDetailsBloc
       geminiResponse: '',
     ));
 
+    // var imgBytes = await state.images[0].readAsBytes();
+
     var response =
         await GenerativeAIService().getProductDetails(title: event.title);
 

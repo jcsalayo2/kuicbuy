@@ -1,3 +1,4 @@
+import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
@@ -13,6 +14,7 @@ import 'package:kuicbuy/pages/search/bloc/search_bloc.dart';
 import 'package:kuicbuy/pages/search/search.dart';
 
 void main() async {
+  
   await Environment.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

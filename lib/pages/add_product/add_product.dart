@@ -313,20 +313,29 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.hintText,
     this.keyboardType = TextInputType.text,
+    this.onFieldSubmitted,
+    this.textInputAction = TextInputAction.next,
   });
 
   final TextEditingController controller;
   final String hintText;
   final TextInputType keyboardType;
+  final void Function(String)? onFieldSubmitted;
+  final TextInputAction textInputAction;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
       keyboardType: keyboardType,
       controller: controller,
       decoration: InputDecoration(
         prefixIcon: () {
-          switch (hintText) {}
+          switch (hintText) {
+            case "Search":
+              return const Icon(Icons.search);
+          }
         }(),
         filled: true,
         fillColor: const Color.fromARGB(255, 233, 233, 233),

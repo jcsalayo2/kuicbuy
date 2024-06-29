@@ -44,17 +44,17 @@ class ProductContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetails(product: product),
-          ),
-        );
-      },
-      child: Ink(
-        color: Colors.indigo[50],
+    return Material(
+      color: Colors.indigo[50],
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetails(product: product),
+            ),
+          );
+        },
         child: Column(
           children: [
             ProductImage(image: product.images.thumbnail),
@@ -107,7 +107,7 @@ class ProductContainer extends StatelessWidget {
 }
 
 class ProductImage extends StatelessWidget {
-  const ProductImage({
+  const   ProductImage({
     super.key,
     required this.image,
   });

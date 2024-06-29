@@ -12,6 +12,8 @@ enum ProductDetailsStatus { initial, loading, done, error }
 
 enum GeminiStatus { idle, loading, error }
 
+enum AlgoliaStatus { idle, loading, error }
+
 final oCcy = NumberFormat("#,##0.00", "en_US");
 
 Path roundedDottedBorder(size) {
