@@ -9,6 +9,8 @@ import 'package:kuicbuy/pages/account/account.dart';
 import 'package:kuicbuy/pages/account/bloc/account_bloc.dart';
 import 'package:kuicbuy/pages/home/bloc/product_list_bloc.dart';
 import 'package:kuicbuy/pages/home/product_list.dart';
+import 'package:kuicbuy/pages/search/bloc/search_bloc.dart';
+import 'package:kuicbuy/pages/search/search.dart';
 
 void main() async {
   await Environment.initialize();
@@ -96,8 +98,10 @@ class Display extends StatelessWidget {
           child: const ProductList(),
         );
       case 1:
-        return const Center(
-            child: Text("Not Yet Implemented. Alam Mo Kung Baket?"));
+        return BlocProvider(
+          create: (context) => SearchBloc(),
+          child: const Search(),
+        );
       case 2:
         return BlocProvider(
           create: (context) => AccountBloc()

@@ -88,27 +88,27 @@ class _AddProductState extends State<AddProduct> {
                           padding: const EdgeInsets.all(10),
                           child: Column(
                             children: [
-                              TextField(
+                              CustomTextField(
                                   controller: titleController,
                                   hintText: "Title"),
                               const SizedBox(height: 20),
-                              TextField(
+                              CustomTextField(
                                   controller: skuController, hintText: "Sku"),
                               const SizedBox(height: 20),
-                              TextField(
+                              CustomTextField(
                                   controller: longDescriptionController,
                                   hintText: "Long Description"),
                               const SizedBox(height: 20),
-                              TextField(
+                              CustomTextField(
                                   controller: shortDescriptionController,
                                   hintText: "Short Description"),
                               const SizedBox(height: 20),
-                              TextField(
+                              CustomTextField(
                                   controller: priceController,
                                   hintText: "Price",
                                   keyboardType: TextInputType.number),
                               const SizedBox(height: 20),
-                              TextField(
+                              CustomTextField(
                                   controller: quantityController,
                                   hintText: "Initial Quantity",
                                   keyboardType: TextInputType.number),
@@ -307,8 +307,8 @@ class _AddProductState extends State<AddProduct> {
   }
 }
 
-class TextField extends StatelessWidget {
-  const TextField({
+class CustomTextField extends StatelessWidget {
+  const CustomTextField({
     super.key,
     required this.controller,
     required this.hintText,
