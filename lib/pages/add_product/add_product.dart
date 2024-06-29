@@ -142,7 +142,7 @@ class _AddProductState extends State<AddProduct> {
                                         borderRadius: BorderRadius.circular(15),
                                       ),
                                       padding: const EdgeInsets.only(
-                                          top: 20, bottom: 20),
+                                          top: 10, bottom: 10),
                                       foregroundColor: Colors.white,
                                       backgroundColor: Colors.blue),
                                   onPressed: () async {
@@ -190,7 +190,7 @@ class _AddProductState extends State<AddProduct> {
                                         borderRadius: BorderRadius.circular(15),
                                       ),
                                       padding: const EdgeInsets.only(
-                                          top: 20, bottom: 20),
+                                          top: 10, bottom: 10),
                                       foregroundColor: Colors.white,
                                       backgroundColor: Colors.blue),
                                   onPressed: () async {
@@ -228,7 +228,7 @@ class _AddProductState extends State<AddProduct> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          padding: const EdgeInsets.only(top: 20, bottom: 20),
+                          padding: const EdgeInsets.only(top: 10, bottom: 10),
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.blue),
                       onPressed: state.productStatus == ProductStatus.initial
