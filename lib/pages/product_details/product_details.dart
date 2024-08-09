@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kuicbuy/bloc/main_bloc.dart';
 import 'package:kuicbuy/constants/constant.dart';
 import 'package:kuicbuy/models/product_model.dart';
-import 'package:kuicbuy/pages/home/product_list.dart';
+import 'package:kuicbuy/pages/home/product_grid.dart';
 import 'package:kuicbuy/pages/product_details/bloc/productdetails_bloc.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -15,11 +17,19 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProductDetailsBloc()
-        ..add(CompileAllImages(images: widget.product.images)),
+        ..add(CompileAllImages(images: widget.product.images))
+        ..add(ToggleSaved(
+            isSaved: context
+                .read<MainBloc>()
+                .state
+                .saved
+                .any((saved) => saved == widget.product.id))),
       child: Builder(builder: (context) {
         return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
           builder: (context, state) {
@@ -30,219 +40,246 @@ class _ProductDetailsState extends State<ProductDetails> {
                 color: Colors.blue,
               ));
             }
-            return Scaffold(
-              body: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20, bottom: 20, right: 20),
-                  child: Column(
+            return PopScope(
+              onPopInvoked: (pop) {
+                context
+                    .read<MainBloc>()
+                    .add(const ChangeNavBarSettings(isVisible: true));
+              },
+              child: Scaffold(
+                body: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, bottom: 20, right: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.arrow_back_ios_new),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            height: 450,
+                            state.images[state.selectedImageIndex],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.only(top: 15, bottom: 20),
+                          shrinkWrap: true,
+                          itemCount: state.images.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisSpacing: 8, crossAxisCount: 4),
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              onTap: () {
+                                context
+                                    .read<ProductDetailsBloc>()
+                                    .add(SetSelectedImageIndex(index: index));
+                              },
+                              child: Ink(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: state.selectedImageIndex == index
+                                      ? Border.all(
+                                          color: Colors.blue,
+                                          width: 2,
+                                        )
+                                      : null,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: ProductImage(
+                                    height: 150,
+                                    width: double.infinity,
+                                    image: state.images[index],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        Text(
+                          'PHP ₱${oCcy.format(widget.product.price)}',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          widget.product.title,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          widget.product.description.long,
+                          textAlign: TextAlign.justify,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                bottomNavigationBar: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  height: 40,
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
+                      Expanded(
+                        flex: 2,
+                        child: InkWell(
+                          onTap: () {
+                            context
+                                .read<ProductDetailsBloc>()
+                                .add(AskGemini(title: widget.product.title));
+
+                            // showGeminiDialog(
+                            //   context: context,
+                            //   response: state.geminiResponse,
+                            //   isLoading:
+                            //       state.geminiStatus == GeminiStatus.loading,
+                            // );
+
+                            final productDetailsBloc =
+                                context.read<ProductDetailsBloc>();
+
+                            showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return GeminiDialog(
+                                    productDetailsBloc: productDetailsBloc,
+                                    product: widget.product);
+                              },
+                            );
                           },
-                          icon: const Icon(Icons.arrow_back_ios_new),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          height: 450,
-                          state.images[state.selectedImageIndex],
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.only(top: 15, bottom: 20),
-                        shrinkWrap: true,
-                        itemCount: state.images.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisSpacing: 8, crossAxisCount: 4),
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                            onTap: () {
-                              context
-                                  .read<ProductDetailsBloc>()
-                                  .add(SetSelectedImageIndex(index: index));
-                            },
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: state.selectedImageIndex == index
-                                    ? Border.all(
-                                        color: Colors.blue,
-                                        width: 2,
-                                      )
-                                    : null,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: ProductImage(
-                                  image: state.images[index],
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            margin: const EdgeInsets.all(3),
+                            height: double.maxFinite,
+                            width: double.maxFinite,
+                            child: const Center(
+                              child: Text(
+                                'Ask Gemini AI',
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                          );
-                        },
-                      ),
-                      Text(
-                        'PHP ₱${oCcy.format(widget.product.price)}',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      Text(
-                        widget.product.title,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        flex: 3,
+                        child: InkWell(
+                          onTap: () {
+                            context.read<ProductDetailsBloc>().add(
+                                AddOrRemoveToSaved(
+                                    isSaved: state.isSaved,
+                                    uid: auth.currentUser?.uid ?? "",
+                                    id: widget.product.id,
+                                    mainBloc: context.read<MainBloc>()));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: state.isSaved
+                                  ? Colors.green[400]
+                                  : Colors.blue,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            margin: const EdgeInsets.all(3),
+                            height: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  state.isSaved
+                                      ? Icons.bookmark_remove_outlined
+                                      : Icons.bookmark_add_outlined,
+                                  size: 12,
+                                  color: state.isSaved
+                                      ? Colors.black
+                                      : Colors.white,
+                                ),
+                                Text(
+                                  state.isSaved ? 'Saved' : 'Save',
+                                  style: TextStyle(
+                                    color: state.isSaved
+                                        ? Colors.black
+                                        : Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                      Text(
-                        widget.product.description.long,
-                        textAlign: TextAlign.justify,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              bottomNavigationBar: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                height: 40,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: InkWell(
-                        onTap: () {
-                          context
-                              .read<ProductDetailsBloc>()
-                              .add(AskGemini(title: widget.product.title));
-
-                          // showGeminiDialog(
-                          //   context: context,
-                          //   response: state.geminiResponse,
-                          //   isLoading:
-                          //       state.geminiStatus == GeminiStatus.loading,
-                          // );
-
-                          final productDetailsBloc =
-                              context.read<ProductDetailsBloc>();
-
-                          showDialog<void>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return GeminiDialog(
-                                  productDetailsBloc: productDetailsBloc,
-                                  product: widget.product);
-                            },
-                          );
-                        },
+                      Expanded(
+                        flex: 3,
                         child: Container(
+                          margin: const EdgeInsets.all(3),
+                          height: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.amber,
+                            color: Colors.blue,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          margin: const EdgeInsets.all(3),
-                          height: double.maxFinite,
-                          width: double.maxFinite,
-                          child: const Center(
-                            child: Text(
-                              'Ask Gemini AI',
-                              textAlign: TextAlign.justify,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
+                          child: Center(
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Contact Seller',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  height: 1,
+                                ),
                               ),
-                            ),
-                          ),
+                              Text(
+                                '₱${oCcy.format(widget.product.price)}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  height: 1,
+                                ),
+                              ),
+                            ],
+                          )),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        margin: const EdgeInsets.all(3),
-                        height: double.infinity,
-                        child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add_shopping_cart_rounded,
-                              size: 12,
-                              color: Colors.white,
-                            ),
-                            Text(
-                              'Add to Cart',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                height: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        margin: const EdgeInsets.all(3),
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Buy Now',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                height: 1,
-                              ),
-                            ),
-                            Text(
-                              '₱${oCcy.format(widget.product.price)}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                height: 1,
-                              ),
-                            ),
-                          ],
-                        )),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );

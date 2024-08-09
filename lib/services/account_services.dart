@@ -21,4 +21,12 @@ class AccountServices {
       isSeller: dSnapshot['isSeller'],
     );
   }
+
+  Future<List<String>> getSaved({required String userId}) async {
+    var qSnapshot = await users.doc(userId).collection("saved").get();
+
+    final allData = qSnapshot.docs.map((doc) => doc.id).toList();
+
+    return allData;
+  }
 }

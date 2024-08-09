@@ -6,6 +6,7 @@ class ProductDetailsState extends Equatable {
   final ProductDetailsStatus productDetailsStatus;
   final GeminiStatus geminiStatus;
   final String geminiResponse;
+  final bool isSaved;
 
   const ProductDetailsState({
     required this.images,
@@ -13,6 +14,7 @@ class ProductDetailsState extends Equatable {
     required this.productDetailsStatus,
     required this.geminiStatus,
     required this.geminiResponse,
+    required this.isSaved,
   });
 
   @override
@@ -22,6 +24,7 @@ class ProductDetailsState extends Equatable {
         productDetailsStatus,
         geminiStatus,
         geminiResponse,
+        isSaved,
       ];
 
   ProductDetailsState.initial()
@@ -29,7 +32,8 @@ class ProductDetailsState extends Equatable {
         selectedImageIndex = 0,
         productDetailsStatus = ProductDetailsStatus.initial,
         geminiStatus = GeminiStatus.idle,
-        geminiResponse = '';
+        geminiResponse = '',
+        isSaved = false;
 
   ProductDetailsState copyWith({
     int? selectedImageIndex,
@@ -37,6 +41,7 @@ class ProductDetailsState extends Equatable {
     ProductDetailsStatus? productDetailsStatus,
     GeminiStatus? geminiStatus,
     String? geminiResponse,
+    bool? isSaved,
   }) {
     return ProductDetailsState(
       selectedImageIndex: selectedImageIndex ?? this.selectedImageIndex,
@@ -44,6 +49,7 @@ class ProductDetailsState extends Equatable {
       productDetailsStatus: productDetailsStatus ?? this.productDetailsStatus,
       geminiStatus: geminiStatus ?? this.geminiStatus,
       geminiResponse: geminiResponse ?? this.geminiResponse,
+      isSaved: isSaved ?? this.isSaved,
     );
   }
 }

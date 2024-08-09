@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:kuicbuy/bloc/main_bloc.dart';
 import 'package:kuicbuy/constants/constant.dart';
 import 'package:kuicbuy/models/product_model.dart';
 import 'package:kuicbuy/pages/home/bloc/product_list_bloc.dart';
 import 'package:kuicbuy/pages/product_details/product_details.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ProductList extends StatefulWidget {
-  const ProductList({super.key});
+class ProductGrid extends StatefulWidget {
+  const ProductGrid({super.key});
 
   @override
-  State<ProductList> createState() => _ProductListState();
+  State<ProductGrid> createState() => _ProductGridState();
 }
 
-class _ProductListState extends State<ProductList> {
+class _ProductGridState extends State<ProductGrid> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProductListBloc, ProductListState>(
@@ -48,6 +49,9 @@ class ProductContainer extends StatelessWidget {
       color: Colors.indigo[50],
       child: InkWell(
         onTap: () {
+          context
+              .read<MainBloc>()
+              .add(const ChangeNavBarSettings(isVisible: false));
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -57,7 +61,11 @@ class ProductContainer extends StatelessWidget {
         },
         child: Column(
           children: [
-            ProductImage(image: product.images.thumbnail),
+            ProductImage(
+              height: 150,
+              width: double.infinity,
+              image: product.images.thumbnail,
+            ),
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -107,25 +115,29 @@ class ProductContainer extends StatelessWidget {
 }
 
 class ProductImage extends StatelessWidget {
-  const   ProductImage({
+  const ProductImage({
     super.key,
     required this.image,
+    required this.height,
+    required this.width,
   });
 
   final String image;
+  final double height;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
     return Image.network(
-      height: 150,
-      width: double.infinity,
+      height: height,
+      width: width,
       loadingBuilder: (BuildContext context, Widget child,
           ImageChunkEvent? loadingProgress) {
         if (loadingProgress == null) return child;
-        return const SizedBox(
-          height: 150,
-          width: double.infinity,
-          child: Center(child: CircularProgressIndicator()),
+        return SizedBox(
+          height: height,
+          width: width,
+          child: const Center(child: CircularProgressIndicator()),
         );
         // return Center(
         //   child: Shimmer.fromColors(

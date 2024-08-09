@@ -55,6 +55,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     ));
 
     Product product = Product(
+      id: "",
       price: event.price,
       quantity: event.initialQuantity,
       sellerId: auth.currentUser!.uid,

@@ -32,4 +32,6 @@ class GenerativeAIService {
 
     return response.text ?? 'Nothing';
   }
+
+  
 }

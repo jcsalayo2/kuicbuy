@@ -36,3 +36,25 @@ class AskGemini extends ProductdetailsEvent {
     required this.title,
   });
 }
+
+class ToggleSaved extends ProductdetailsEvent {
+  final bool isSaved;
+
+  const ToggleSaved({
+    required this.isSaved,
+  });
+}
+
+class AddOrRemoveToSaved extends ProductdetailsEvent {
+  final bool isSaved;
+  final String id;
+  final String uid;
+  final MainBloc mainBloc;
+
+  const AddOrRemoveToSaved({
+    required this.isSaved,
+    required this.id,
+    required this.uid,
+    required this.mainBloc,
+  });
+}
