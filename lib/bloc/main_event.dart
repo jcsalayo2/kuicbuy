@@ -28,3 +28,41 @@ class GetProductSaved extends MainEvent {
 
   const GetProductSaved({required this.saved});
 }
+
+class RemoveSaved extends MainEvent {
+  final String productId;
+  final String uid;
+
+  const RemoveSaved({required this.productId, required this.uid});
+}
+
+class StartChat extends MainEvent {
+  final Product product;
+  final String uid;
+
+  const StartChat({required this.product, required this.uid});
+}
+
+// class GetChats extends MainEvent {
+//   final String uid;
+
+//   const GetChats({required this.uid});
+// }
+
+class ListenToChats extends MainEvent {
+  final String uid;
+
+  const ListenToChats({required this.uid});
+}
+
+class GetProductsInChat extends MainEvent {
+  final List<Chat> chats;
+
+  const GetProductsInChat({required this.chats});
+}
+
+class SaveChatListener extends MainEvent {
+  final StreamSubscription<QuerySnapshot<Object?>> chatsListenerState;
+
+  const SaveChatListener({required this.chatsListenerState});
+}

@@ -9,6 +9,7 @@ import 'package:kuicbuy/core/boot/environment.dart';
 import 'package:kuicbuy/firebase_options.dart';
 import 'package:kuicbuy/pages/account/account.dart';
 import 'package:kuicbuy/pages/account/bloc/account_bloc.dart';
+import 'package:kuicbuy/pages/chats/chats.dart';
 import 'package:kuicbuy/pages/home/bloc/product_list_bloc.dart';
 import 'package:kuicbuy/pages/home/product_grid.dart';
 import 'package:kuicbuy/pages/saved/saved.dart';
@@ -41,8 +42,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: BlocProvider(
-        create: (context) =>
-            MainBloc()..add(GetSaved(uid: auth.currentUser?.uid ?? "")),
+        create: (context) => MainBloc()
+          ..add(GetSaved(uid: auth.currentUser?.uid ?? ""))
+          ..add(ListenToChats(uid: auth.currentUser?.uid ?? "")),
         child: const MyHomePage(title: 'KuicBuy'),
       ),
     );
@@ -60,6 +62,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<ScrollController> _scrollControllers = [
+    ScrollController(),
     ScrollController(),
     ScrollController(),
     ScrollController(),
@@ -88,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: const Search(),
                 ),
                 const Saved(),
+                const Chats(),
                 BlocProvider(
                   create: (context) => AccountBloc()
                     ..add(GetAccount(userId: auth.currentUser?.uid ?? '')),
@@ -150,6 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           title: "Saved",
           controller: _scrollControllers[2]),
+      persistentBottomNavBarItem(
+          icon: const Icon(Icons.chat),
+          title: "Chats",
+          controller: _scrollControllers[1]),
       persistentBottomNavBarItem(
           icon: const Icon(Icons.person_rounded),
           title: "Account",

@@ -14,6 +14,8 @@ enum GeminiStatus { idle, loading, error }
 
 enum AlgoliaStatus { idle, loading, error }
 
+enum MessageType { text, image }
+
 final oCcy = NumberFormat("#,##0.00", "en_US");
 
 Path roundedDottedBorder(size) {

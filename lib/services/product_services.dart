@@ -19,9 +19,10 @@ class ProductServices {
     }).toList();
   }
 
-  Future<List<Product>> getProductsByIds({required List<String> saved}) async {
+  Future<List<Product>> getProductsByIds(
+      {required List<String> productIds}) async {
     var qSnapShot =
-        await products.where(FieldPath.documentId, whereIn: saved).get();
+        await products.where(FieldPath.documentId, whereIn: productIds).get();
     return qSnapShot.docs.map((doc) {
       Object? response = doc.data();
       return Product.fromJson(response as Map<String, dynamic>);

@@ -29,4 +29,25 @@ class AccountServices {
 
     return allData;
   }
+
+  Future<void> addChat(
+      {required String userId,
+      required String chatId,
+      required String sellerId}) async {
+    try {
+      users.doc(userId).collection("chats").doc(chatId).set({});
+      users.doc(sellerId).collection("chats").doc(chatId).set({});
+    } catch (ex) {
+      throw ("Something went wrong (account_service.dart addChat Method): $ex");
+    }
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> listenToChatIds(
+      {required String userId}) {
+    try {
+      return users.doc(userId).collection("chats").snapshots();
+    } catch (ex) {
+      throw ("Something went wrong (account_service.dart getChatsId Method): $ex");
+    }
+  }
 }
