@@ -5,6 +5,7 @@ import 'package:kuicbuy/bloc/main_bloc.dart';
 import 'package:kuicbuy/constants/constant.dart';
 import 'package:kuicbuy/models/grouped_saved_products.dart';
 import 'package:kuicbuy/models/product_model.dart';
+import 'package:kuicbuy/pages/chats/conversation.dart';
 import 'package:kuicbuy/pages/home/product_grid.dart';
 import 'package:kuicbuy/pages/product_details/bloc/productdetails_bloc.dart';
 import 'package:kuicbuy/pages/product_details/product_details.dart';
@@ -20,7 +21,22 @@ class _SavedState extends State<Saved> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MainBloc, MainState>(
+    return BlocConsumer<MainBloc, MainState>(
+      listener: (context, state) {
+        if (state.existingChatId != null || state.newChat != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Conversation(
+                chat: state.existingChatId != null
+                    ? state.chats
+                        .firstWhere((chat) => chat.id == state.existingChatId)
+                    : state.newChat!,
+              ),
+            ),
+          );
+        }
+      },
       builder: (context, state) {
         return ListView.builder(
           itemCount: state.groupSavedProducts.length,

@@ -25,6 +25,7 @@ class CreateAccount extends SignupLoginEvent {
   final String name;
   final String email;
   final String password;
+  final MainBloc mainBloc;
 
   @override
   List<Object> get props => [];
@@ -33,14 +34,20 @@ class CreateAccount extends SignupLoginEvent {
     required this.name,
     required this.email,
     required this.password,
+    required this.mainBloc,
   });
 }
 
 class Login extends SignupLoginEvent {
   final String email;
   final String password;
+  final MainBloc mainBloc;
   @override
   List<Object> get props => [];
 
-  const Login({required this.email, required this.password});
+  const Login({
+    required this.email,
+    required this.password,
+    required this.mainBloc,
+  });
 }

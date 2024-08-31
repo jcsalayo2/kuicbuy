@@ -9,6 +9,8 @@ class MainState extends Equatable {
   final DateTime timestamp; // used for forced emit
   final StreamSubscription<QuerySnapshot<Object?>>? chatsListenerState;
   final StreamSubscription<QuerySnapshot<Object?>>? chatIdsListenerState;
+  final String? existingChatId;
+  final Chat? newChat;
 
   const MainState({
     required this.isVisible,
@@ -19,6 +21,8 @@ class MainState extends Equatable {
     required this.timestamp,
     required this.chatsListenerState,
     required this.chatIdsListenerState,
+    required this.existingChatId,
+    required this.newChat,
   });
 
   MainState.initial()
@@ -29,7 +33,9 @@ class MainState extends Equatable {
         chats = [],
         timestamp = DateTime.now(),
         chatsListenerState = null,
-        chatIdsListenerState = null;
+        chatIdsListenerState = null,
+        existingChatId = null,
+        newChat = null;
 
   @override
   List<Object> get props => [
@@ -50,6 +56,8 @@ class MainState extends Equatable {
     DateTime? timestamp,
     StreamSubscription<QuerySnapshot<Object?>>? chatsListenerState,
     StreamSubscription<QuerySnapshot<Object?>>? chatIdsListenerState,
+    String? existingChatId,
+    Chat? newChat,
   }) {
     return MainState(
       isVisible: isVisible ?? this.isVisible,
@@ -60,6 +68,8 @@ class MainState extends Equatable {
       timestamp: timestamp ?? this.timestamp,
       chatsListenerState: chatsListenerState ?? this.chatsListenerState,
       chatIdsListenerState: chatIdsListenerState ?? this.chatIdsListenerState,
+      existingChatId: existingChatId,
+      newChat: newChat,
     );
   }
 }

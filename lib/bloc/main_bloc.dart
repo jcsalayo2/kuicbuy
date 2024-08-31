@@ -95,15 +95,26 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     if (event.uid == '') {
       return;
     }
-    if (await ChatServices()
-        .isChatExist(uid: event.uid, product: event.product)) {
+    var existingChatId = await ChatServices()
+        .isChatExist(uid: event.uid, product: event.product);
+    if (existingChatId != null) {
+      emit(state.copyWith(
+        existingChatId: existingChatId,
+        timestamp: DateTime.now(),
+      )); // Triggers chat
+
       return;
     }
 
-    await ChatServices().startChat(
+    var newChat = await ChatServices().startChat(
       uid: event.uid,
       product: event.product,
     );
+
+    emit(state.copyWith(
+      newChat: newChat,
+      timestamp: DateTime.now(),
+    )); // Triggers chat
   }
 
   FutureOr<void> _listenToChats(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kuicbuy/bloc/main_bloc.dart';
 import 'package:kuicbuy/pages/signuplogin/bloc/signup_login_bloc.dart';
 
 class SignupLogin extends StatefulWidget {
@@ -134,9 +135,9 @@ class _SignupLoginState extends State<SignupLogin> {
                                   onPressed: () {
                                     if (state.isLogin) {
                                       context.read<SignupLoginBloc>().add(Login(
-                                            email: emailController.text,
-                                            password: passwordController.text,
-                                          ));
+                                          email: emailController.text,
+                                          password: passwordController.text,
+                                          mainBloc: context.read<MainBloc>()));
                                     } else {
                                       if (passwordController.text !=
                                           confirmPasswordController.text) {
@@ -148,13 +149,13 @@ class _SignupLoginState extends State<SignupLogin> {
                                                     "Password and Confirm Password are not the same")));
                                         return;
                                       }
-                                      context
-                                          .read<SignupLoginBloc>()
-                                          .add(CreateAccount(
-                                            name: nameController.text,
-                                            email: emailController.text,
-                                            password: passwordController.text,
-                                          ));
+                                      context.read<SignupLoginBloc>().add(
+                                          CreateAccount(
+                                              name: nameController.text,
+                                              email: emailController.text,
+                                              password: passwordController.text,
+                                              mainBloc:
+                                                  context.read<MainBloc>()));
                                     }
                                   },
                                   child: Text(

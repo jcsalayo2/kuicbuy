@@ -58,3 +58,15 @@ class AddOrRemoveToSaved extends ProductdetailsEvent {
     required this.mainBloc,
   });
 }
+
+class ContactSeller extends ProductdetailsEvent {
+  final String uid;
+  final Product product;
+  @override
+  List<Object> get props => [];
+
+  const ContactSeller({
+    required this.uid,
+    required this.product,
+  });
+}

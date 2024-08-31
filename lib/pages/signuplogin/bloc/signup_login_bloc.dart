@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kuicbuy/bloc/main_bloc.dart';
 import 'package:kuicbuy/services/firebase_auth.dart';
 
 part 'signup_login_event.dart';
@@ -44,6 +45,9 @@ class SignupLoginBloc extends Bloc<SignupLoginEvent, SignupLoginState> {
     );
 
     if (result == true) {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      event.mainBloc.add(GetSaved(uid: auth.currentUser!.uid));
+      event.mainBloc.add(ListenToChats(uid: auth.currentUser!.uid));
       emit(state.copyWith(
         isSignupLoginDone: true,
       ));
@@ -86,6 +90,9 @@ class SignupLoginBloc extends Bloc<SignupLoginEvent, SignupLoginState> {
     );
 
     if (result == true) {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      event.mainBloc.add(GetSaved(uid: auth.currentUser!.uid));
+      event.mainBloc.add(ListenToChats(uid: auth.currentUser!.uid));
       emit(state.copyWith(
         isSignupLoginDone: true,
       ));

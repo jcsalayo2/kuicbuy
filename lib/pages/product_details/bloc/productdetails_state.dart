@@ -7,6 +7,8 @@ class ProductDetailsState extends Equatable {
   final GeminiStatus geminiStatus;
   final String geminiResponse;
   final bool isSaved;
+  final Chat? existingChat;
+  final DateTime timestamp; // for force emit
 
   const ProductDetailsState({
     required this.images,
@@ -15,6 +17,8 @@ class ProductDetailsState extends Equatable {
     required this.geminiStatus,
     required this.geminiResponse,
     required this.isSaved,
+    this.existingChat,
+    required this.timestamp,
   });
 
   @override
@@ -25,6 +29,7 @@ class ProductDetailsState extends Equatable {
         geminiStatus,
         geminiResponse,
         isSaved,
+        timestamp,
       ];
 
   ProductDetailsState.initial()
@@ -33,7 +38,9 @@ class ProductDetailsState extends Equatable {
         productDetailsStatus = ProductDetailsStatus.initial,
         geminiStatus = GeminiStatus.idle,
         geminiResponse = '',
-        isSaved = false;
+        isSaved = false,
+        existingChat = null,
+        timestamp = DateTime.now();
 
   ProductDetailsState copyWith({
     int? selectedImageIndex,
@@ -42,6 +49,8 @@ class ProductDetailsState extends Equatable {
     GeminiStatus? geminiStatus,
     String? geminiResponse,
     bool? isSaved,
+    Chat? chat,
+    DateTime? timestamp,
   }) {
     return ProductDetailsState(
       selectedImageIndex: selectedImageIndex ?? this.selectedImageIndex,
@@ -50,6 +59,8 @@ class ProductDetailsState extends Equatable {
       geminiStatus: geminiStatus ?? this.geminiStatus,
       geminiResponse: geminiResponse ?? this.geminiResponse,
       isSaved: isSaved ?? this.isSaved,
+      existingChat: chat,
+      timestamp: timestamp ?? this.timestamp,
     );
   }
 }

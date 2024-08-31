@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kuicbuy/bloc/main_bloc.dart';
 import 'package:kuicbuy/constants/constant.dart';
 import 'package:kuicbuy/models/product_model.dart';
+import 'package:kuicbuy/pages/chats/conversation.dart';
 import 'package:kuicbuy/pages/home/product_grid.dart';
 import 'package:kuicbuy/pages/product_details/bloc/productdetails_bloc.dart';
 
@@ -31,7 +32,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                 .saved
                 .any((saved) => saved == widget.product.id))),
       child: Builder(builder: (context) {
-        return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+        return BlocConsumer<ProductDetailsBloc, ProductDetailsState>(
+          listener: (context, state) {
+            if (state.existingChat != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Conversation(
+                    chat: state.existingChat!,
+                  ),
+                ),
+              );
+            }
+          },
           builder: (context, state) {
             if (state.productDetailsStatus == ProductDetailsStatus.initial ||
                 state.productDetailsStatus == ProductDetailsStatus.loading) {
@@ -245,37 +258,45 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                       Expanded(
                         flex: 3,
-                        child: Container(
-                          margin: const EdgeInsets.all(3),
-                          height: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(5),
+                        child: InkWell(
+                          onTap: () {
+                            context.read<ProductDetailsBloc>().add(
+                                ContactSeller(
+                                    uid: auth.currentUser?.uid ?? '',
+                                    product: widget.product));
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.all(3),
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Contact Seller',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1,
+                                  ),
+                                ),
+                                Text(
+                                  '₱${oCcy.format(widget.product.price)}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1,
+                                  ),
+                                ),
+                              ],
+                            )),
                           ),
-                          child: Center(
-                              child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Contact Seller',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1,
-                                ),
-                              ),
-                              Text(
-                                '₱${oCcy.format(widget.product.price)}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1,
-                                ),
-                              ),
-                            ],
-                          )),
                         ),
                       ),
                     ],

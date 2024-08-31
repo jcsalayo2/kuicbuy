@@ -14,7 +14,7 @@ class ChatServices {
 
   final storage = FirebaseStorage.instance;
 
-  Future<void> startChat(
+  Future<Chat> startChat(
       {required String uid, required Product product}) async {
     try {
       Timestamp timeStamp = Timestamp.fromDate(DateTime.now());
@@ -33,7 +33,8 @@ class ChatServices {
 
       await chats.doc(id).set(chatData);
 
-      AccountServices().addChat(userId: uid, chatId: id, sellerId: product.sellerId);
+      AccountServices()
+          .addChat(userId: uid, chatId: id, sellerId: product.sellerId);
 
       var messages = chats.doc(id).collection("messages");
 
@@ -48,12 +49,14 @@ class ChatServices {
       };
 
       await messages.doc(messageId).set(messageData);
+
+      return Chat.fromJson(chatData);
     } catch (ex) {
       throw ("Something went wrong (chat_services.dart startChat Method): $ex");
     }
   }
 
-  Future<bool> isChatExist(
+  Future<String?> isChatExist(
       {required String uid, required Product product}) async {
     try {
       var myChats = await chats
@@ -62,10 +65,10 @@ class ChatServices {
           .get();
 
       if (myChats.size >= 1) {
-        return true;
+        return myChats.docs.first.id; // return first chat ID
       }
 
-      return false;
+      return null;
     } catch (ex) {
       throw ("Something went wrong (chat_services.dart isChatExist Method): $ex");
     }
@@ -125,5 +128,12 @@ class ChatServices {
     } catch (ex) {
       throw ("Something went wrong (chat_services.dart updateChat Method): $ex");
     }
+  }
+
+  Future<Chat> getChatById({required String chatId}) async {
+    var chat = await chats.doc(chatId).get();
+
+    Object? response = chat.data();
+    return Chat.fromJson(response as Map<String, dynamic>);
   }
 }

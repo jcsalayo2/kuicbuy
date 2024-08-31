@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:kuicbuy/bloc/main_bloc.dart';
+import 'package:kuicbuy/models/chat_model.dart';
 import 'package:kuicbuy/models/product_model.dart';
+import 'package:kuicbuy/services/chat_services.dart';
 import 'package:kuicbuy/services/generative_ai_service.dart';
 import 'package:kuicbuy/services/product_services.dart';
 
@@ -23,6 +25,7 @@ class ProductDetailsBloc
     on<AskGemini>(_askGemini);
     on<ToggleSaved>(_toggleIsSaved);
     on<AddOrRemoveToSaved>(_addOrRemoveToSaved);
+    on<ContactSeller>(_contactSeller);
   }
 
   FutureOr<void> _compileImages(
@@ -95,5 +98,33 @@ class ProductDetailsBloc
     } catch (ex) {
       throw ("Something went wrong (productdetails_bloc.dart _addOrRemoveToSaved Method : $ex)");
     }
+  }
+
+  FutureOr<void> _contactSeller(
+      ContactSeller event, Emitter<ProductDetailsState> emit) async {
+    if (event.uid == '') {
+      return;
+    }
+    var existingChatId = await ChatServices()
+        .isChatExist(uid: event.uid, product: event.product);
+    if (existingChatId != null) {
+      Chat existingChat =
+          await ChatServices().getChatById(chatId: existingChatId);
+      emit(state.copyWith(
+        chat: existingChat,
+        timestamp: DateTime.now(),
+      )); // emit the existing chat
+      return;
+    }
+
+    var newChat = await ChatServices().startChat(
+      uid: event.uid,
+      product: event.product,
+    );
+
+    emit(state.copyWith(
+      chat: newChat,
+      timestamp: DateTime.now(),
+    )); // Triggers chat
   }
 }
